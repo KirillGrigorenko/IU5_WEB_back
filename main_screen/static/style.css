@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    color: #000000; 
+}
+body{
+    background: white;
+}
+.space{
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+
+    height: fit-content;
+    min-height: 100vh;
+    background-color: whitesmoke;
+}
+.header{
+    display: flex;
+    align-items: stretch;
+    position: sticky;
+    background-color: lightgray;
+    padding:5px;
+    top: 0;
+    width: auto;
+}
+
+.header-text{
+    display: flex;
+}
+
+.header-buttons-div{
+    margin-left: auto;
+    display: flex;
+    align-items: stretch;
+    
+}
+
+.header-buttons{
+    display: flex;
+    align-items: center;
+    
+}
+.container{
+    padding: 10px;
+}
+
+.card{
+    border-radius: 20px;
+    background-color: #FFFAFA;
+    padding: 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.header-buttons{
+    color: #446F9C;
+}
+.card-container{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 20px;
+    width: 100%;
+}
+.card{
+
+}

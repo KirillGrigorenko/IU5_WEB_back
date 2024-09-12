@@ -1,0 +1,25 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="rus">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Groups</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"/>
+  </head>
+  <body>
+    <div class="space">
+        <div class="header">
+          <h1 class="header-text"> {{ page_name }}</h1>
+          <div class="header-buttons-div">
+              <button class="header-buttons">Home</button>
+          </div>
+        </div>
+        <div class="container">
+          {% block container %}{% endblock %}
+        </div>
+    </div>
+  </body>
+</html>
