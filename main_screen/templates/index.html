@@ -11,7 +11,6 @@
   </head>
   <body>
     <div class="space">
-
       <div class="full-width-block">
         <div class="image-area">
             <a href="http://localhost:8000/hello/">
@@ -23,17 +22,24 @@
         </div>
       </div>
 
-        <div class="container">
-
-          <div class="search">
-            <form action="/search" method="GET"> <!-- Укажите URL для обработки поискового запроса -->
+      <div class="container">
+        <div class="search-container"> 
+            <form action="/search" method="GET"> 
                 <input type="text" name="query" placeholder="Введите текст для поиска" class="search-input" required>
                 <button type="submit" class="search-button">Поиск</button>
             </form>
+            <select id="course-select"> 
+                <option value="1">1 курс</option>
+                <option value="2">2 курс</option>
+                <option value="3">3 курс</option>
+                <option value="4">4 курс</option>
+            </select>
         </div>
+        <div class="space-between"></div>
         {% block container %}{% endblock %}
-        </div>
-        
+      </div>    
+    
+      
     </div>
   </body>
 </html>
