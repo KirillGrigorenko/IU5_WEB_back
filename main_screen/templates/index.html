@@ -11,18 +11,27 @@
   </head>
   <body>
     <div class="space">
-        <div class="header">
-          <h1 class="header-text"> {{ page_name }}</h1>
-          <div class="header-buttons-div">
-              <button class="header-buttons">Home</button>
-          </div>
+
+      <div class="full-width-block">
+        <div class="text-area">
+            <h1>Заголовок  блока</h1>
+            <p>Osmanthus wine tastes the same as I remember... But where are those who share the memory?</p>
         </div>
+        <div class="image-area">
+            <a href="https://example.com">
+                <img src="http://127.0.0.1:9000/lab1/photo1.jpeg" alt="Описание изображения" />
+            </a>
+        </div>
+    </div>
+    
+
         <div class="container">
           <div class="search">
               <title>Search</title>
           </div>
           {% block container %}{% endblock %}
         </div>
+        
     </div>
   </body>
 </html>

@@ -11,47 +11,103 @@ body{
 head{
     background: #446F9C;
 }
+
+.space{
+    width: 100%;
+    height: fit-content;
+    min-height: 500px;
+    background-color: whitesmoke;
+}
 .container{
     background: #000000;
-    padding: 10px;
-    width: 1366px;
-    
+    padding: 2%;
+    min-width: 500px;
 }
 .card{
-    border-radius: 20px;
+    border-radius: 25px;
     background-color: #FFFAFA;
-    padding: 10%;
+    padding: 7%;
+    margin: 2%;
     display: flex;
     max-width: 405px;
     border: 2px solid black;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-evenly;
+    align-items: center;
 }
-.image{
-    width: 100px;
-    height: 100px;
+.card_image{
+    display: inline-flex;
+    max-width: 250px;
+    border-radius: 20px;
+    object-fit: cover;
+    text-align: center;
 }
+.title{
+    margin-top: 16px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}
+.short-description{
+    font-size: 14px;
+    font-weight: 500;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.card-button{
+    padding: 8px 10px; 
+    border-radius: 10px;
+    border: 1px solid #000000;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
 .card-container{
     background: #ff0303;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
-    width: 100%;
-    
-}
-.card-content{
-    
-}
-
-.space{
     width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-
-    height: fit-content;
-    min-height: 100vh;
-    background-color: whitesmoke;
+    max-width: 1200px; 
+    margin: 0 auto;
+    padding: 20px; 
+    padding-top: 100px; /* МЕНЯТЬ ТУТ ЕСЛИ*/
+    border-radius: 10px; 
 }
+
+.full-width-block {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    width: 100%; 
+    padding: 20px; 
+    background-color: #f5f5f5; 
+    position: fixed;
+    top: 0;
+    left: 0; 
+    z-index: 1000;
+    
+}
+
+.text-area {
+    flex: 1; /* Текст занимает доступное пространство */
+    padding-right: 20px; /* Отступ справа */
+}
+
+.image-area {
+    flex: 0; /* Отключаем растягивание этого блока */
+}
+
+.image-area img {
+    max-width: 100%; /* Изображение будет адаптироваться к размеру контейнера */
+    height: auto; /* Сохраняем пропорции изображения */
+    cursor: pointer; /* Курсор будет указывать на то, что изображение кликабельно */
+}
+
+
 .header{
     display: flex;
     align-items: stretch;

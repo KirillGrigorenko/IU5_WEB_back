@@ -6,13 +6,23 @@ groups = [
 {'id':2, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-52B", 'group_desc':"Но окэй"},
 {'id':3, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-53B", 'group_desc':"Я понимаю"},
 {'id':4, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-54B", 'group_desc':"Что он делает"},
-{'id':5, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-55B", 'group_desc':"Но я не принимаю"}]
+{'id':5, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-55B", 'group_desc':"Но я не принимаю"},
+{'id':6, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-55B", 'group_desc':"НDEQW"}
+]
+
+index_photos = [
+    {'id':1, 'image':"http://127.0.0.1:9000/lab1/bmstu.png", 'alt': "pizda"},
+    {'id':2, 'image':"http://127.0.0.1:9000/lab1/search.png", 'alt': "pizda"},
+    {'id':3, 'image':"http://127.0.0.1:9000/lab1/dashboard.png", 'alt': "pizda"},
+    {'id':4, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'alt': "pizda"}
+]
 
 def hello(request):
     return render(request, 'card.html', 
     { 'data': {
         'page_name': 'Группы',
-        'group' : groups
+        'group' : groups,
+        'index_photo' : index_photos
     }})
 
 # Create your views here.
