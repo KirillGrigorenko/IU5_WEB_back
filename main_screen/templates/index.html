@@ -13,23 +13,25 @@
     <div class="space">
 
       <div class="full-width-block">
-        <div class="text-area">
-            <h1>Заголовок  блока</h1>
-            <p>Osmanthus wine tastes the same as I remember... But where are those who share the memory?</p>
-        </div>
         <div class="image-area">
-            <a href="https://example.com">
-                <img src="http://127.0.0.1:9000/lab1/photo1.jpeg" alt="Описание изображения" />
+            <a href="http://localhost:8000/hello/">
+                <img src={{data.index_photo.0.image}} alt="BMSTU gerb" class="link-image" />
             </a>
         </div>
-    </div>
-    
+        <div class="text-area">
+            <h1>BMSTU</h1>
+        </div>
+      </div>
 
         <div class="container">
+
           <div class="search">
-              <title>Search</title>
-          </div>
-          {% block container %}{% endblock %}
+            <form action="/search" method="GET"> <!-- Укажите URL для обработки поискового запроса -->
+                <input type="text" name="query" placeholder="Введите текст для поиска" class="search-input" required>
+                <button type="submit" class="search-button">Поиск</button>
+            </form>
+        </div>
+        {% block container %}{% endblock %}
         </div>
         
     </div>
