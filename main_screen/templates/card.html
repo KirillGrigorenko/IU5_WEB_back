@@ -2,14 +2,14 @@
 
 {% block container %}
 <div class="card-container">
-    {% for group in data.group %}
+    {% for group in data.groups %}
         <div class="card">
             
             <img src={{group.image}} class="card_image">
             <div class="card-content">
                 <p class="title">{{group.group_name}}</p>
                 <p class="short-description">{{group.group_desc}}</p>
-                <a href="" class="card-button">Подробнее</a> 
+                <a href="{% url 'info' group.id %}" class="card-button">Подробнее</a> 
             </div>
         </div>
     {% endfor %}

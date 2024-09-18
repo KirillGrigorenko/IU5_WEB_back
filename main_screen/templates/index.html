@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Groups</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'index_style.css' %}"/>
   </head>
   <body>
     <div class="space">
@@ -24,22 +24,27 @@
 
       <div class="container">
         <div class="search-container"> 
-            <form action="/search" method="GET"> 
-                <input type="text" name="query" placeholder="Введите текст для поиска" class="search-input" required>
-                <button type="submit" class="search-button">Поиск</button>
-            </form>
-            <select id="course-select"> 
-                <option value="1">1 курс</option>
-                <option value="2">2 курс</option>
-                <option value="3">3 курс</option>
-                <option value="4">4 курс</option>
-            </select>
-        </div>
-        <div class="space-between"></div>
+          <form method="GET" action="{% url 'groups_search' %}" class="search-section"> 
+              <input type="text" name="q" placeholder="Введите текст для поиска" class="search-input" value="{{ request.GET.q }}">
+              <button type="submit" class="search-button">Поиск</button>
+          </form>
+          <select id="course-select">
+              <option value="1">1 курс</option>
+              <option value="2">2 курс</option>
+              <option value="3">3 курс</option>
+              <option value="4">4 курс</option>
+          </select>
+      </div>
+      
+      <div class="space-between"></div>
         {% block container %}{% endblock %}
       </div>    
-    
-      
+
+      <div class="floating-button">
+        <a href="http://localhost:8000/bin">
+            <img src="{{data.index_photo.1.image}}" alt="Кнопка" />
+        </a>
+    </div>
     </div>
   </body>
 </html>

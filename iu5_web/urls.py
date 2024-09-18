@@ -21,5 +21,7 @@ from main_screen import views as m_s
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hello/', m_s.hello),
+    path('hello/', m_s.hello, name='groups_search'),
+    path('hello/info/<int:id>/', m_s.info, name='info'),
+    path('bin/', m_s.bin, name='bin'),
 ]
