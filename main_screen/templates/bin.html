@@ -12,15 +12,32 @@
 <body>
     <div class="space">
         <div class="full-width-block">
-          <div class="image-area">
+            <div class="image-area">
               <a href="http://localhost:8000/hello/">
                   <img src={{data.index_photo.0.image}} alt="BMSTU gerb" class="link-image" />
               </a>
-          </div>
-          <div class="text-area">
-            <h1>{{ data.group.group_name }}</h1>
-           </div>
+            </div>
+            <div class="text-area">
+                <h1>{{ data.group.group_name }}</h1>
+            </div>
         </div>
+        <h1>Группы заказа</h1>
+        <ul>
+            {% for group in data %}
+                <li>
+                    
+                    <img src="{{ group.image }}" alt="{{ group.group_name }}">
+                    <h2>{{ group.group_name }}</h2>
+                    <p>{{ group.group_desc }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="space-between"></div>
+            {% block container %}{% endblock %}
+        </div>  
+
+        <a href="{% url 'groups_search' %}">Вернуться на страницу</a>
        
         
     </div>

@@ -10,6 +10,16 @@ groups = [
 {'id':6, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-55B", 'group_desc':"НDEQW"}
 ]
 
+orders = [
+    {'order_id': 1, 'order_date': '17.09.2024', 'groups':[
+        {'id':1, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-51B", 'group_desc':"Сомнительно"},
+        {'id':2, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-52B", 'group_desc':"Но окэй"},]},
+    {'order_id': 2, 'order_date': '16.09.2024', 'groups':[
+        {'id':4, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-51B", 'group_desc':"Сомнительно"},
+        {'id':5, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-52B", 'group_desc':"Но окэй"},]}
+
+]
+
 index_photos = [
     {'id':1, 'image':"http://127.0.0.1:9000/lab1/bmstu.png", 'alt': "bmstu.png"},
     {'id':2, 'image':"http://127.0.0.1:9000/lab1/search.png", 'alt': "search.png"},
@@ -40,9 +50,11 @@ def info(request, id):
     return render(request, 'info.html', {'data': {'group': group, 'index_photo':index_photos}})
 
 
-def bin(request):
-     return render(request, 'bin.html', {'data': {
-        'group':groups, 'index_photo':index_photos
-     }})
+def GetBin(request, order_id):
+    order = next((order for order in orders if order['order_id'] == order_id), None)
+    if order is None:
+        return render(request, '404.html', status=404)
+    return render(request, 'bin.html', {'data': order['groups']})
+
 
 # Create your views here.

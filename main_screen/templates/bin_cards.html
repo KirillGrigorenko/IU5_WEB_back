@@ -1,0 +1,13 @@
+{% extends 'bin.html' %}
+
+{% block container %}
+<div class="card-container">
+    {% for group in data %}
+    <li>
+        <img src="{{ group.image }}" alt="{{ group.group_name }}">
+        <h2>{{ group.group_name }}</h2>
+        <p>{{ group.group_desc }}</p>
+    </li>
+{% endfor %}
+</div>
+{% endblock %}
