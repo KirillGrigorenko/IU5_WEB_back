@@ -21,7 +21,7 @@ from main_screen import views as m_s
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hello/', m_s.hello, name='groups_search'),
-    path('hello/info/<int:id>/', m_s.info, name='info'),
-    path('bin/<int:order_id>', m_s.GetBin, name='bin_order'),
+    path('groups/', m_s.groups_func, name='groups_search'),
+    path('groups/info/<int:id>/', m_s.info, name='group_info'),
+    path('schedule/<int:order_id>', m_s.get_schedule, name='schedule'),
 ]

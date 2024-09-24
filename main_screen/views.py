@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from datetime import date
 
 groups = [
@@ -15,9 +15,14 @@ orders = [
         {'id':1, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-51B", 'group_desc':"Сомнительно"},
         {'id':2, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-52B", 'group_desc':"Но окэй"},]},
     {'order_id': 2, 'order_date': '16.09.2024', 'groups':[
-        {'id':4, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-51B", 'group_desc':"Сомнительно"},
-        {'id':5, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-52B", 'group_desc':"Но окэй"},]}
-
+        {'id':5, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-55B", 'group_desc':"Но я не принимаю"},
+        {'id':6, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-55B", 'group_desc':"НDEQW"},]},
+    {'order_id': 3, 'order_date': '16.09.2024', 'groups':[
+        {'id':3, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-53B", 'group_desc':"Я понимаю"},
+        {'id':4, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-54B", 'group_desc':"Что он делает"},]},
+    {'order_id': 4, 'order_date': '16.09.2024', 'groups':[
+        {'id':1, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-51B", 'group_desc':"Сомнительно"},
+        {'id':4, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'group_name':"IU5-54B", 'group_desc':"Что он делает"},]}
 ]
 
 index_photos = [
@@ -27,8 +32,8 @@ index_photos = [
     {'id':4, 'image':"http://127.0.0.1:9000/lab1/photo1.jpeg", 'alt': "photo1.jpeg"}
 ]
 
-def hello(request):
-    query = request.GET.get('q')
+def groups_func(request):
+    query = request.GET.get('srch_group')
     if query:
         filtered_groups = [
             group for group in groups
@@ -37,7 +42,7 @@ def hello(request):
             ]
     else:
         filtered_groups = groups
-    return render(request, 'card.html', 
+    return render(request, 'groups.html', 
     { 'data': {
         'page_name': 'Группы',
         'groups' : filtered_groups,
@@ -47,14 +52,22 @@ def hello(request):
 
 def info(request, id):
     group = next((gr for gr in groups if gr['id'] == id), None)
-    return render(request, 'info.html', {'data': {'group': group, 'index_photo':index_photos}})
+    return render(request, 'info_group.html', {'data': {'group': group, 'index_photo':index_photos}})
 
 
-def GetBin(request, order_id):
+def get_schedule(request, order_id):
     order = next((order for order in orders if order['order_id'] == order_id), None)
     if order is None:
         return render(request, '404.html', status=404)
-    return render(request, 'bin.html', {'data': order['groups']})
+    return render(request, 'schedule.html', {'data': {'orders': orders, 'index_photo': index_photos, 'this': order}})
 
+def schedule(request):
+    if request.method == 'GET':
+        order_id = request.GET.get('order_id')
+        if order_id is not None:
+            order_id = int(order_id)
+            print(order_id)
+            return get_schedule(request, order_id)
+    return render(request, 'schedule.html', {'data': {'orders': orders, 'index_photo': index_photos}})
 
 # Create your views here.

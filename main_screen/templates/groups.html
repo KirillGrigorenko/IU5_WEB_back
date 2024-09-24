@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block search %}
+<div class="container">
+    <div class="search-container"> 
+        <form method="GET" action="{% url 'groups_search' %}" class="search-section"> 
+            <input type="text" name="srch_group" placeholder="Введите текст для поиска" class="search-input" value="{{ request.GET.srch_group }}">
+            <button type="submit" class="search-button">Поиск</button>
+        </form>
+        <select id="course-select">
+            <option value="1">1 курс</option>
+            <option value="2">2 курс</option>
+            <option value="3">3 курс</option>
+            <option value="4">4 курс</option>
+        </select>
+        <div class="floating-button">
+            <a href="http://localhost:8000/schedule/1">
+            <img src="{{data.index_photo.1.image}}" alt="Кнопка" />
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block container %}
+<div class="card-container">
+    {% for group in data.groups %}
+        <div class="card">
+            <img src={{group.image}} class="card_image">
+            <div class="card-content">
+                <p class="title">{{group.group_name}}</p>
+                <p class="short-description">{{group.group_desc}}</p>
+                <a href="{% url 'group_info' group.id %}" class="card-button">Подробнее</a> 
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

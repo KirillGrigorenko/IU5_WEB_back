@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+
+
+{% block search %} {% endblock %}
+
+
+{% block container %}
+
+<form method="GET">
+    <select id="course-select" name="order_id">
+      {% for order in data.orders %}
+        <option value="{{ order.order_id }}">заказ {{ order.order_id }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="search-button">Перейти</button>
+</form>
+
+<div class="card-container-schedule">
+
+    {% for group in data.this.groups %}
+    <div class="card-schedule">
+        <img src={{group.image}} class="card_image">
+        <div class="card-content-schedule">
+            <p class="title-schedule">{{group.group_name}}</p>
+            <p class="short-description-schedule">{{group.group_desc}}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

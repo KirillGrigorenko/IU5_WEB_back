@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+
+
+{% block search %} {% endblock %}
+
+{% block container %}
+<div class="container-info">
+    <h2>Расписание</h2>
+    <div class="card-container-info">
+        <div class="card-info">
+            <img src="{{ data.group.image }}" alt="{{ data.group.group_name }}" class="card_image-info">
+        </div>
+        <div class="card-content-info">
+            <p class="title-info">{{ data.group.group_name }}</p>
+            <p class="short-description-info">{{ data.group.group_desc }}</p>
+            <a href="http://localhost:8000/groups/" class="back-button-info">Назад</a>
+        </div>
+    </div>   
+</div>
+
+{% endblock %}
