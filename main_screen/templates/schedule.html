@@ -7,26 +7,45 @@
 
 {% block container %}
 
-<form method="GET">
-    <select id="course-select" name="order_id">
-      {% for order in data.orders %}
-        <option value="{{ order.order_id }}">заказ {{ order.order_id }}</option>
-      {% endfor %}
-    </select>
-    <button type="submit" class="search-button">Перейти</button>
-</form>
+<div class="space_schedule"> </div>
+  {% for group in data.this.groups %}
+        {% for g in data.groups %}
 
-<div class="card-container-schedule">
+            {% if g.id == group.id %}
+                <div class="card-schedule">
+                    
+                    <img src="{{ g.image }}" class="card_image">
+                    <div class="input-group">
+                        <div class="input-field">
+                          <label for="time">Время</label>
+                          <select class="form-control" id="time">
+                            <option value="" selected disabled hidden>Выберите время...</option>
+                            <option value="time1">12:00</option>
+                            <option value="time2">14:00</option>
+                            <option value="time3">16:00</option>
+                          </select>
+                        </div>
+                        <div class="input-field">
+                          <label for="audience">Аудитория</label>
+                          <select class="form-control" id="audience">
+                            <option value="" selected disabled hidden>Выберите аудиторию...</option>
+                            <option value="auditorium1">515ю</option>
+                            <option value="auditorium2">502ю</option>
+                            <option value="auditorium3">404</option>
+                          </select>
+                        </div>
+                        <div class="input-field button-add">
+                          <button type="submit" class="card-button">Добавить</button>
+                        </div>
+                      </div>
+                    <div class="card-content-schedule">
+                        <p class="title-schedule">{{ g.group_fac }}</p>
+                        <p class="short-description-schedule">{{ g.contact }}</p>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
 
-    {% for group in data.this.groups %}
-    <div class="card-schedule">
-        <img src={{group.image}} class="card_image">
-        <div class="card-content-schedule">
-            <p class="title-schedule">{{group.group_name}}</p>
-            <p class="short-description-schedule">{{group.group_desc}}</p>
-        </div>
-    </div>
     {% endfor %}
-</div>
 
 {% endblock %}
