@@ -45,6 +45,16 @@ head{
     box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
     
 }
+
+.count {
+    position: absolute;
+    top: -0.5px;
+    right: -5px;
+    background-color: #446F9C;
+    color: white;
+    border-radius: 50%;
+    padding: 5px 10px;
+}
 .card_image{
     display: inline-flex;
     max-width: 250px;
