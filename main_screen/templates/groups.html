@@ -4,12 +4,19 @@
 <div class="container">
     
     <div class="search-container"> 
-        <select id="course-select">
-            <option value="1">1 курс</option>
-            <option value="2">2 курс</option>
-            <option value="3">3 курс</option>
-            <option value="4">4 курс</option>
-        </select>
+        <form method="get" action="" class="method_search">
+            <select id="course-select" name="srch_course">
+                <option value="0">Все курсы</option>
+                <option value="1">1 курс</option>
+                <option value="2">2 курс</option>
+                <option value="3">3 курс</option>
+                <option value="4">4 курс</option>
+            </select>
+            <button type="submit" class="card-button">Найти</button>
+        </form> 
+        <div class="count">
+            {{ data.ReqCallCount }}
+        </div>
         <div class="floating-button">
             <a href="http://localhost:8000/schedule/1">
             <img src="{{ 'http://127.0.0.1:9000/lab1/check-circle.svg' }}" alt="Кнопка" />

@@ -36,10 +36,16 @@ def groups_func(request):
             ]
     else:
         filtered_groups = groups
+
+    count = 0
+    for order in orders:
+        if order['order_id'] == 1:
+            count = len(order['groups'])
     return render(request, 'groups.html', 
     { 'data': {
         'page_name': 'Группы',
         'groups' : filtered_groups,
+         'ReqCallCount': count,
     }})
 
 
