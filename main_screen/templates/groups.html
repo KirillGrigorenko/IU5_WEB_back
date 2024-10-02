@@ -3,15 +3,19 @@
 {% block search %}
 <div class="container">
     <div class="search-container"> 
-        <select id="course-select">
-            <option value="1">1 курс</option>
-            <option value="2">2 курс</option>
-            <option value="3">3 курс</option>
-            <option value="4">4 курс</option>
-        </select>
+        <form method="get" action="" class="method_search">
+            <select id="course-select" name="srch_course">
+                <option value="0">Все курсы</option>
+                <option value="1">1 курс</option>
+                <option value="2">2 курс</option>
+                <option value="3">3 курс</option>
+                <option value="4">4 курс</option>
+            </select>
+            <button type="submit" class="card-button">Найти</button>
+        </form> 
         <div class="floating-button">
             <a href="http://localhost:8000/schedule/1">
-            <img src="{{ 'http://127.0.0.1:9000/lab1/check-circle.svg' }}" alt="Кнопка" />
+                <img src="{{ 'http://127.0.0.1:9000/lab1/check-circle.svg' }}" alt="Кнопка" />
             </a>
         </div>
     </div>
@@ -22,11 +26,11 @@
 <div class="card-container">
     {% for group in data.groups %}
         <div class="card">
-            <img src={{group.image}} class="card_image">
+            <img src="{{ group.photo_url }}" class="card_image">
             <div class="card-content">
-                <p class="title">{{ group.group_fac }}{{ group.group_kaf }}{{ group.group_course }}-{{ group.group_course }}{{ group.group_count }}</p>
-                <a href="{% url 'group_info' group.id %}" class="card-button">Добавить</a> 
-                <a href="{% url 'group_info' group.id %}" class="card-button">Подробнее</a> 
+                <p class="title">{{ group.group_fac }}{{ group.group_kaf }}-{{ group.group_course }}{{ group.group_count }}</p>
+  
+                <a href="{% url 'group_info' group.id %}" class="card-button">Подробнее</a>
             </div>
         </div>
     {% endfor %}

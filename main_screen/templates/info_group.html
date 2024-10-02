@@ -1,23 +1,20 @@
 {% extends 'base.html' %}
 
-
-
 {% block search %} {% endblock %}
 
 {% block container %}
 <div class="container-info">
-    <h2>{{ data.group.group_fac }}{{ data.group.group_kaf }}{{ data.group.group_course }}-{{ data.group.group_course }}{{ data.group.group_count }}</h2>
+    <h2>{{ data.group.group_fac }}{{ data.group.group_kaf }}-{{ data.group.group_course }}{{ data.group.group_count }}</h2>
     <div class="card-container-info">
         <div class="card-info">
-            <img src="{{ data.group.image }}" alt="{{ data.group.group_name }}" class="card_image-info">
+            <img src="{{ data.group.photo_url }}" alt="{{ data.group.group_fac }} {{ data.group.group_kaf }}" class="card_image-info">
         </div>
         <div class="card-content-info">
             <p class="content-text">Староста группы: {{ data.group.contact }}</p>
             <p class="content-text">Контактный телефон: +{{ data.group.contact_phone }}</p>
         
-            <a href="http://localhost:8000/groups/" class="back-button-info">Назад</a>
+            <a href="{% url 'groups_search' %}" class="back-button-info">Назад</a>
         </div>
     </div>   
 </div>
-
 {% endblock %}

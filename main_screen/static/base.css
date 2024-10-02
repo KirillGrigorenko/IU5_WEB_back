@@ -68,6 +68,28 @@ head{
     margin-bottom: 10px;
     text-align: center;
 }
+.btn-search{
+    padding: 8px 10px; 
+    border-radius: 10px;
+    border: 1px solid #000000;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+.method_search {
+    display: flex;
+    width: 100%;
+}
+
+.method_search select {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.method_search button {
+    width: auto;
+}
+
 .card-button{
     padding: 8px 10px; 
     border-radius: 10px;
