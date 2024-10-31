@@ -33,7 +33,7 @@
         <div class="card">
             <img src="{{ group.photo_url }}" class="card_image">
             <div class="card-content">
-                <p class="title">{{ group.group_fac }}{{ group.group_kaf }}-{{ group.group_course }}{{ group.group_count }}</p>
+                <p class="title">{{ group.facultet }}{{ group.kafedra }}-{{ group.course }}{{ group.count }}</p>
   
                 <a href="{% url 'group_info' group.id %}" class="card-button">Подробнее</a>
             </div>

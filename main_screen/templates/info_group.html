@@ -4,13 +4,13 @@
 
 {% block container %}
 <div class="container-info">
-    <h2>{{ data.group.group_fac }}{{ data.group.group_kaf }}-{{ data.group.group_course }}{{ data.group.group_count }}</h2>
+    <h2>{{ data.group.facultet }}{{ data.group.kafedra }}-{{ data.group.course }}{{ data.group.count }}</h2>
     <div class="card-container-info">
         <div class="card-info">
-            <img src="{{ data.group.photo_url }}" alt="{{ data.group.group_fac }} {{ data.group.group_kaf }}" class="card_image-info">
+            <img src="{{ data.group.photo_url }}" alt="{{ data.group.facultet }} {{ data.group.kafedra }}" class="card_image-info">
         </div>
         <div class="card-content-info">
-            <p class="content-text">Староста группы: {{ data.group.contact }}</p>
+            <p class="content-text">Староста группы: {{ data.group.headboy }}</p>
             <p class="content-text">Контактный телефон: +{{ data.group.contact_phone }}</p>
         
             <a href="{% url 'groups_search' %}" class="back-button-info">Назад</a>

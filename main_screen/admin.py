@@ -1,27 +1,22 @@
 from django.contrib import admin
-from .models import Group, Order, OrderGroup
+from .models import Group, Lesson, LessonGroup
 
-class OrderGroupInline(admin.TabularInline):
-    model = OrderGroup
-    extra = 1
-    fields = ('group', 'lesson_time', 'audience')
 
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
-    list_display = ('group_fac', 'group_kaf', 'group_course', 'group_count', 'contact', 'contact_phone', 'photo_url', 'status')
-    search_fields = ('group_fac', 'group_kaf', 'group_course', 'contact')
+    list_display = ('facultet', 'kafedra', 'course', 'count', 'headboy', 'contact_phone', 'photo_url', 'status')
+    search_fields = ('facultet', 'kafedra', 'course', 'headboy')
 
-@admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'building', 'status', 'display_groups')
-    search_fields = ('building',)
-    inlines = [OrderGroupInline]
+@admin.register(Lesson)
+class LessonAdmin(admin.ModelAdmin):
+    list_display = ('id', 'time', 'date', 'status', 'display_groups')
+    search_fields = ('time', 'date') 
 
     def display_groups(self, obj):
         return ', '.join([str(group).replace(' ', '') for group in obj.groups.all()])
     display_groups.short_description = 'Groups'
 
-@admin.register(OrderGroup)
-class OrderGroupAdmin(admin.ModelAdmin):
-    list_display = ('order', 'group', 'lesson_time', 'audience')
-    search_fields = ('order__id', 'group__group_fac', 'lesson_time', 'audience')
+@admin.register(LessonGroup)
+class LessonGroupAdmin(admin.ModelAdmin):
+    list_display = ('lesson', 'group', 'building', 'audience', 'headboy')
+    search_fields = ('lesson', 'group', 'building', 'audience', 'headboy')

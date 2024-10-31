@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from datetime import date
-from .models import Group,Order
+from .models import Group,Lesson
 from django.db.models import Q
 from django.core.exceptions import BadRequest
 from django.http import JsonResponse
@@ -33,10 +33,14 @@ orders = [
         {'id':1}]},
 ]
 
+def calculate_value(input_number):
+    return input_number * 2 - 1
+    
+
 def groups_func(request):
     query = request.GET.get('srch_course', '')
     if query and query != '0':
-        filtered_groups = Group.objects.filter(status='Действует', group_course__icontains=query).order_by('id')
+        filtered_groups = Group.objects.filter(status='Действует', course__icontains=query).order_by('id')
     else:
         filtered_groups = Group.objects.filter(status='Действует').order_by('id')
     

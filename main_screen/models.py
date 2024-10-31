@@ -2,36 +2,40 @@ from django.db import models
 from datetime import datetime
 
 class Group(models.Model):
-    group_fac = models.CharField(max_length=100)
-    group_kaf = models.CharField(max_length=100)
-    group_course = models.PositiveIntegerField()
-    group_count = models.PositiveIntegerField()
-    contact = models.CharField(max_length=100)
+    facultet = models.CharField(max_length=100)
+    kafedra = models.CharField(max_length=100)
+    course = models.PositiveIntegerField()
+    count = models.PositiveIntegerField()
+    headboy = models.CharField(max_length=100)
     contact_phone = models.CharField(max_length=15)
     photo_url = models.CharField(max_length=254, default='')
     status = models.CharField(max_length=10, default='Действует')
 
     def __str__(self):
-        return f'{self.group_fac.replace(" ", "")}{self.group_kaf.replace(" ", "")}-{self.group_course}{self.group_count}'
+        return f'{self.facultet.replace(" ", "")}{self.kafedra.replace(" ", "")}-{self.course}{self.count}'
 
 
-class Order(models.Model):
-    groups = models.ManyToManyField(Group, through='OrderGroup')
-    building = models.CharField(max_length=30, default='ГЗ')
+class Lesson(models.Model):
+    groups = models.ManyToManyField(Group, through='LessonGroup')
+    time = models.CharField(max_length=30, default='ГЗ')
+    date = models.DateField(default=datetime.now)
     status = models.CharField(max_length=10, default='черновик')
 
     def __str__(self):
-        return f"Order for {', '.join([str(group).replace(' ', '') for group in self.groups.all()])}"
+        return f"Lesson for {', '.join([str(group).replace(' ', '') for group in self.groups.all()])}"
 
 
-class OrderGroup(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+class LessonGroup(models.Model):
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    lesson_time = models.DateTimeField()
+    building = models.CharField(max_length=100)
     audience = models.CharField(max_length=100)
+    headboy = models.CharField(max_length=100)
 
     class Meta:
-        unique_together = ['order', 'group']
+        unique_together = ['lesson', 'group']
 
     def __str__(self):
-        return f'Order {self.order.id} - Group {self.group.id} ({self.audience})'
+        return f'Lesson {self.lesson.id} - Group {self.group.id} ({self.audience})'
+
+
