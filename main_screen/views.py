@@ -8,14 +8,14 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 
-groups = [
-{'id':1, 'image':"http://127.0.0.1:9000/lab1/facultet/ИУ5.svg", 'group_fac':"ИУ", 'group_kaf':5, 'group_course':"3", 'group_count':"3", 'contact':"Власов А.А.", 'contact_phone':"79156734835", '':"",'':""},
-{'id':4, 'image':"http://127.0.0.1:9000/lab1/facultet/ИУ5.svg", 'group_fac':"ИУ", 'group_kaf':5, 'group_course':"3", 'group_count':"5", 'contact':"Кузьмин Д.А.", 'contact_phone':"79190108127"},
-{'id':3, 'image':"http://127.0.0.1:9000/lab1/facultet/ИУ1.svg", 'group_fac':"ИУ", 'group_kaf':1, 'group_course':"3", 'group_count':"3", 'contact':"Беляев И.А.", 'contact_phone':"79858888218"},
-{'id':5, 'image':"http://127.0.0.1:9000/lab1/facultet/ИУ4.png", 'group_fac':"ИУ", 'group_kaf':4, 'group_course':"2", 'group_count':"3", 'contact':"Нагапетян В.С.", 'contact_phone':"79854605879"},
-{'id':2, 'image':"http://127.0.0.1:9000/lab1/facultet/ИУ4.png", 'group_fac':"ИУ", 'group_kaf':4, 'group_course':"4", 'group_count':"3", 'contact':"Григоренко К.Д.", 'contact_phone':"79166431639"},
-{'id':6, 'image':"http://127.0.0.1:9000/lab1/facultet/ИУ8.png", 'group_fac':"ИУ", 'group_kaf':8, 'group_course':"4", 'group_count':"2", 'contact':"Канев А.И.", 'contact_phone':""}
-]
+# groups = [
+# {'id':1, 'image':"http://127.0.0.1:9000/lab1/facultet/ИУ5.svg", 'group_fac':"ИУ", 'group_kaf':5, 'group_course':"3", 'group_count':"3", 'contact':"Власов А.А.", 'contact_phone':"79156734835", '':"",'':""},
+# {'id':4, 'image':"http://127.0.0.1:9000/lab1/facultet/ИУ5.svg", 'group_fac':"ИУ", 'group_kaf':5, 'group_course':"3", 'group_count':"5", 'contact':"Кузьмин Д.А.", 'contact_phone':"79190108127"},
+# {'id':3, 'image':"http://127.0.0.1:9000/lab1/facultet/ИУ1.svg", 'group_fac':"ИУ", 'group_kaf':1, 'group_course':"3", 'group_count':"3", 'contact':"Беляев И.А.", 'contact_phone':"79858888218"},
+# {'id':5, 'image':"http://127.0.0.1:9000/lab1/facultet/ИУ4.png", 'group_fac':"ИУ", 'group_kaf':4, 'group_course':"2", 'group_count':"3", 'contact':"Нагапетян В.С.", 'contact_phone':"79854605879"},
+# {'id':2, 'image':"http://127.0.0.1:9000/lab1/facultet/ИУ4.png", 'group_fac':"ИУ", 'group_kaf':4, 'group_course':"4", 'group_count':"3", 'contact':"Григоренко К.Д.", 'contact_phone':"79166431639"},
+# {'id':6, 'image':"http://127.0.0.1:9000/lab1/facultet/ИУ8.png", 'group_fac':"ИУ", 'group_kaf':8, 'group_course':"4", 'group_count':"2", 'contact':"Канев А.И.", 'contact_phone':""}
+# ]
 
 orders = [
     {'order_id': 1, 'order_date': "2024-09-21 17:00:00", 'classroom':"515ю", 'info': "asmentus wine tastes the same as i remember", 'groups':[
