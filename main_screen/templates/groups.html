@@ -16,13 +16,20 @@
         <div class="count">
             {{ data.ReqCallCount }}
         </div>
-        <div class="floating-button">
 
-            <a href="http://localhost:8000/schedule/1">
-            
+        <div class="floating-button">
+            <a 
+                {% if data.active_lesson %} 
+                    href="http://localhost:8000/schedule/{{ data.active_lesson.id }}" 
+                {% else %}
+                    class="disabled" 
+                {% endif %}
+                >
                 <img src="{{ 'http://127.0.0.1:9000/lab1/check-circle.svg' }}" alt="Кнопка" />
             </a>
         </div>
+
+
     </div>
 </div>
 {% endblock %}
@@ -34,10 +41,34 @@
             <img src="{{ group.photo_url }}" class="card_image">
             <div class="card-content">
                 <p class="title">{{ group.facultet }}{{ group.kafedra }}-{{ group.course }}{{ group.count }}</p>
-  
                 <a href="{% url 'group_info' group.id %}" class="card-button">Подробнее</a>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="group_id" value="{{ group.id }}">
+                    <button type="submit" class="card-button">Добавить</button>
+                </form>
             </div>
         </div>
     {% endfor %}
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const flashMessage = "{{ flash_message|escapejs }}";
+        console.log(flashMessage);  
+
+        if (flashMessage) {
+            const messageContainer = document.createElement('div');
+            messageContainer.className = 'flash-message';
+            messageContainer.textContent = flashMessage;
+            document.body.appendChild(messageContainer);
+
+            setTimeout(() => {
+                messageContainer.remove();
+            }, 4000);
+        }
+    });
+</script>
 {% endblock %}

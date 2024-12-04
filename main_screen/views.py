@@ -1,41 +1,15 @@
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from datetime import date
-from .models import Group,Lesson
+from .models import Group,Lesson, LessonGroup
 from django.db.models import Q
 from django.core.exceptions import BadRequest
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
+from django.utils.dateparse import parse_date, parse_time
+from django.utils.timezone import now
 
-
-# groups = [
-# {'id':1, 'image':"http://127.0.0.1:9000/lab1/facultet/ИУ5.svg", 'group_fac':"ИУ", 'group_kaf':5, 'group_course':"3", 'group_count':"3", 'contact':"Власов А.А.", 'contact_phone':"79156734835", '':"",'':""},
-# {'id':4, 'image':"http://127.0.0.1:9000/lab1/facultet/ИУ5.svg", 'group_fac':"ИУ", 'group_kaf':5, 'group_course':"3", 'group_count':"5", 'contact':"Кузьмин Д.А.", 'contact_phone':"79190108127"},
-# {'id':3, 'image':"http://127.0.0.1:9000/lab1/facultet/ИУ1.svg", 'group_fac':"ИУ", 'group_kaf':1, 'group_course':"3", 'group_count':"3", 'contact':"Беляев И.А.", 'contact_phone':"79858888218"},
-# {'id':5, 'image':"http://127.0.0.1:9000/lab1/facultet/ИУ4.png", 'group_fac':"ИУ", 'group_kaf':4, 'group_course':"2", 'group_count':"3", 'contact':"Нагапетян В.С.", 'contact_phone':"79854605879"},
-# {'id':2, 'image':"http://127.0.0.1:9000/lab1/facultet/ИУ4.png", 'group_fac':"ИУ", 'group_kaf':4, 'group_course':"4", 'group_count':"3", 'contact':"Григоренко К.Д.", 'contact_phone':"79166431639"},
-# {'id':6, 'image':"http://127.0.0.1:9000/lab1/facultet/ИУ8.png", 'group_fac':"ИУ", 'group_kaf':8, 'group_course':"4", 'group_count':"2", 'contact':"Канев А.И.", 'contact_phone':""}
-# ]
-
-orders = [
-    {'order_id': 1, 'order_date': "2024-09-21 17:00:00", 'classroom':"515ю", 'info': "asmentus wine tastes the same as i remember", 'groups':[
-        {'id':1},
-        {'id':2}]},
-    {'order_id': 2, 'order_date': "2024-09-21 17:00:00", 'classroom':"515ю", 'info': "asmentus wine tastes the same as i remember", 'groups':[
-        {'id':3},
-        {'id':4}]},
-    {'order_id': 3, 'order_date': "2024-10-01 08:00:00", 'classroom':"502ю", 'info': "asmentus wine tastes the same as i remember", 'groups':[
-        {'id':2},
-        {'id':5}]},
-    {'order_id': 4, 'order_date': "2024-10-03 10:00:00", 'classroom':"404", 'info': "asmentus wine tastes the same as i remember", 'groups':[
-        {'id':3},
-        {'id':4},
-        {'id':1}]},
-]
-
-def calculate_value(input_number):
-    return input_number * 2 - 1
-    
 
 def groups_func(request):
     query = request.GET.get('srch_course', '')
@@ -43,17 +17,47 @@ def groups_func(request):
         filtered_groups = Group.objects.filter(status='Действует', course__icontains=query).order_by('id')
     else:
         filtered_groups = Group.objects.filter(status='Действует').order_by('id')
-    
-    count = 0
-    for order in orders:
-        if order['order_id'] == 1:
-            count = len(order['groups'])
 
-    return render(request, 'groups.html', { 'data': {
-        'page_name': 'Группы',
-        'groups': filtered_groups,
-        'ReqCallCount': count,
-    }})
+    # Проверяем наличие активного урока
+    active_lesson = Lesson.objects.filter(status=Lesson.LessonStatus.DRAFT).first()
+    flash_message = ""
+
+    # Считаем количество групп в активной заявке
+    req_call_count = LessonGroup.objects.filter(lesson=active_lesson).count() if active_lesson else 0
+
+    if request.method == 'POST':
+        group_id = request.POST.get('group_id')
+        if group_id:
+            group = get_object_or_404(Group, pk=group_id)
+
+            # Создаём черновую заявку, если её нет
+            if not active_lesson:
+                active_lesson = Lesson.objects.create(
+                    status=Lesson.LessonStatus.DRAFT,
+                    name="Новая Заявка",
+                )
+                req_call_count = 0  # Начинаем с 0, так как новая заявка только что создана
+
+            # Проверяем, не добавлена ли группа в заявку
+            if LessonGroup.objects.filter(lesson=active_lesson, group=group).exists():
+                flash_message = "Группа уже добавлена в текущую заявку."
+            else:
+                LessonGroup.objects.create(lesson=active_lesson, group=group)
+                flash_message = "Группа успешно добавлена."
+                req_call_count += 1  # Увеличиваем количество групп в заявке
+ 
+    # Отправляем данные в шаблон
+    return render(request, 'groups.html', {
+        'data': {
+            'page_name': 'Группы',
+            'groups': filtered_groups,
+            'ReqCallCount': req_call_count,
+            'active_lesson': active_lesson,
+        },
+        'flash_message': flash_message,  # Передаем сообщение для отображения
+    })
+
+
 
 def info(request, id):
     group = get_object_or_404(Group, pk=id) 
@@ -63,18 +67,44 @@ def info(request, id):
         }
     })
 
-def add_group(request, group_id):
-    group = get_object_or_404(Group, id=group_id)
-    order, created = Order.objects.get_or_create(status='черновик')
-
-    if group in order.groups.all():
-        return redirect('groups')
-
-    order.groups.add(group)
-    return redirect('groups')
-
 def get_schedule(request, order_id):
-    order = next((order for order in orders if order['order_id'] == order_id), None) 
-    if order is None:
-        return render(request, '404.html', status=404)
-    return render(request, 'schedule.html', {'data': {'groups': groups, 'this': order}})
+    lesson = get_object_or_404(Lesson, id=order_id, status=Lesson.LessonStatus.DRAFT)
+    related_groups = LessonGroup.objects.filter(lesson=lesson)
+
+    # Текущая дата и время для шаблона
+    today = now()
+    today_date = today.date()
+    now_time = today.strftime('%H:%M')
+
+    flash_message = ""  # Переменная для flash-сообщения
+
+    if request.method == 'POST':
+        update_type = request.POST.get('update_type', '')
+
+        if update_type == 'formation_datetime':
+            new_date = request.POST.get('formation_date', '').strip()
+            new_time = request.POST.get('formation_time', '').strip()
+            parsed_date = parse_date(new_date)
+            parsed_time = parse_time(new_time)
+            
+            if parsed_date and parsed_time:
+                lesson.formation_datetime = now().replace(
+                    year=parsed_date.year, month=parsed_date.month, day=parsed_date.day,
+                    hour=parsed_time.hour, minute=parsed_time.minute, second=0, microsecond=0
+                )
+                lesson.save()
+                flash_message = 'Дата и время формирования успешно обновлены.'
+                messages.success(request, flash_message)
+            else:
+                flash_message = 'Неверный формат даты или времени.'
+                messages.error(request, flash_message)
+
+    context = {
+        'lesson': lesson,
+        'related_groups': related_groups,
+        'today_date': today_date,
+        'now_time': now_time,
+        'flash_message': flash_message,  # Передаем flash-сообщение в шаблон
+    }
+
+    return render(request, 'schedule.html', context)

@@ -1,51 +1,77 @@
 {% extends 'base.html' %}
 
-
-
 {% block search %} {% endblock %}
 
-
 {% block container %}
+<div class="space_schedule"></div>
 
-<div class="space_schedule"> </div>
-  {% for group in data.this.groups %}
-        {% for g in data.groups %}
+{% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
 
-            {% if g.id == group.id %}
-                <div class="card-schedule">
-                    
-                    <img src="{{ g.image }}" class="card_image">
-                    <div class="input-group">
-                        <div class="input-field">
-                          <label for="time">Время</label>
-                          <select class="form-control" id="time">
-                            <option value="" selected disabled hidden>Выберите время...</option>
-                            <option value="time1">12:00</option>
-                            <option value="time2">14:00</option>
-                            <option value="time3">16:00</option>
-                          </select>
-                        </div>
-                        <div class="input-field">
-                          <label for="audience">Аудитория</label>
-                          <select class="form-control" id="audience">
-                            <option value="" selected disabled hidden>Выберите аудиторию...</option>
-                            <option value="auditorium1">515ю</option>
-                            <option value="auditorium2">502ю</option>
-                            <option value="auditorium3">404</option>
-                          </select>
-                        </div>
-                        <div class="input-field button-add">
-                          <button type="submit" class="card-button">Добавить</button>
-                        </div>
-                      </div>
-                    <div class="card-content-schedule">
-                        <p class="title-schedule">{{ g.group_fac }}</p>
-                        <p class="short-description-schedule">{{ g.contact }}</p>
-                    </div>
-                </div>
+{% if lesson %}
+    <div class="edit-lesson">
+        <h2 class="edit-lesson-title">Редактировать заявку: {{ lesson.name }}</h2>
+        <form method="POST" class="edit-lesson-form">
+            {% csrf_token %}
+            <label for="name">Название заявки:</label>
+            <input type="text" id="name" name="name" value="{{ lesson.name }}">
+            
+            <label for="date">Дата оформления:</label>
+            <input type="date" id="date" name="date" value="{{ lesson.date }}">
+            
+            <label for="time">Время оформления:</label>
+            <input type="time" id="time" name="time" value="{{ lesson.time }}">
+            
+            <label for="formation_date">Дата формирования:</label>
+            <input type="date" id="formation_date" name="formation_date" value="{{ today_date }}">
+            
+            <label for="formation_time">Время формирования:</label>
+            <input type="time" id="formation_time" name="formation_time" value="{{ now_time }}">
+            
+            <button type="submit">Сохранить</button>
+        </form>
+    </div>
+
+    <h3 class="groups-title">Группы:</h3>
+    <div class="groups-container">
+        {% for lesson_group in related_groups %}
+            <div class="card-schedule">
+                {% if lesson_group.group.photo_url %}
+                    <img src="{{ lesson_group.group.photo_url }}" class="card-image" alt="Фото группы">
                 {% endif %}
-            {% endfor %}
+                <div class="card-content-schedule">
+                    <p class="title-schedule">{{ lesson_group.group.facultet }}{{ lesson_group.group.kafedra }}-{{ lesson_group.group.course }}{{ lesson_group.group.count }}</p>
+                    <p>Аудитория: {{ lesson_group.audience }}</p>
+                    <p>Здание: {{ lesson_group.building }}</p>
+                    <p>Староста: {{ lesson_group.headboy }}</p>
+                    <p>Контактный телефон: {{ lesson_group.group.contact_phone }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="no-lesson">Заявка не найдена или еще не сформирована.</p>
+{% endif %}
+{% endblock %}
 
-    {% endfor %}
-
+{% block extra_scripts %}
+<script>
+    setTimeout(function() {
+        const alertMessages = document.querySelectorAll('.alert-container .alert');
+        alertMessages.forEach(function(alert) {
+            alert.style.transition = "opacity 1s ease-out";
+            alert.style.opacity = "0";
+            setTimeout(function() {
+                alert.remove();
+            }, 1000); 
+        });
+    }, 5000); 
+</script>
 {% endblock %}
