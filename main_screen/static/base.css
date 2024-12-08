@@ -68,6 +68,12 @@ head{
     margin-bottom: 10px;
     text-align: center;
 }
+.button-container {
+    display: flex;                /* Используем Flexbox для выравнивания кнопок по горизонтали */
+    gap: 10px;                    /* Отступ между кнопками */
+    justify-content: center;      /* Центрируем кнопки по горизонтали */
+    margin-top: 10px;              /* Отступ сверху для кнопок */
+}
 .card-button{
     padding: 8px 10px; 
     border-radius: 10px;
@@ -793,3 +799,91 @@ input[type="text"]:not([type="number"]):not([type="email"]):not([type="password"
     color: #333;
     margin-bottom: 30px;
 }
+
+.alert-container {
+    position: fixed; /* Фиксированное положение */
+    top: 20px;
+    right: 20px;
+    z-index: 1000; /* Поверх других элементов */
+    width: 25%; /* Четверть ширины экрана */
+    max-width: 300px; /* Максимальная ширина сообщения */
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Расстояние между сообщениями */
+}
+
+.alert {
+    background-color: #e6f7ff; /* Голубоватый фон */
+    color: #005b8f; /* Тёмно-синий текст */
+    border: 1px solid #b3e5fc; /* Голубая рамка */
+    border-radius: 8px; /* Скруглённые углы */
+    padding: 15px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Лёгкая тень */
+    position: relative;
+    animation: slide-in 0.5s ease-out, fade-out 0.5s 4.5s ease-out forwards;
+}
+
+.alert .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: inherit;
+    cursor: pointer;
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+.remove-group-btn {
+    background: none;
+    border: none;
+    color: red;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+}
+
+.remove-group-btn:hover {
+    color: darkred;
+}
+
+.small-input {
+    width: 150px; /* Установите подходящую ширину */
+    padding: 5px; /* Уменьшите внутренний отступ */
+    font-size: 14px; /* Уменьшите размер шрифта */
+}
+
+label {
+    margin-right: 10px; /* Отступ между меткой и полем */
+}
+
+button.update-group-btn {
+    margin-top: 10px; /* Добавьте небольшой отступ сверху */
+    padding: 5px 10px; /* Сделайте кнопку компактной */
+    font-size: 14px; /* Уменьшите размер текста в кнопке */
+}
+

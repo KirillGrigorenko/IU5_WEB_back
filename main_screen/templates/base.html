@@ -15,7 +15,7 @@
         <div class="full-width-block">
             <div class="image-area">
                 <a href="http://localhost:8000/groups/">
-                    <img src= "{{ 'http://127.0.0.1:9000/lab1/bmstu_logo.svg' }}" alt="BMSTU gerb" class="link-image" />
+                    <img src="{{ 'http://127.0.0.1:9000/lab1/bmstu_logo.svg' }}" alt="BMSTU gerb" class="link-image" />
                 </a>
             </div>
             <div class="text-area">
@@ -25,11 +25,11 @@
             
         {% block search %}{% endblock %}
         
-        {% block extra_scripts %}{% endblock %}
         <div class="space-between"></div>
-            {% block container %}{% endblock %}
-        </div>    
+        {% block container %}{% endblock %}
 
     </div>
+
+    {% block extra_scripts %}{% endblock %}
   </body>
 </html>

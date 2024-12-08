@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block search %}
+
 <div class="container">
     <div class="search-container"> 
         <form method="get" action="" class="method_search">
@@ -29,24 +30,37 @@
             </a>
         </div>
 
-
+        <div class="alert-container">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">
+                        <span>{{ message }}</span>
+                        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}
 
 {% block container %}
+
+
 <div class="card-container">
     {% for group in data.groups %}
         <div class="card">
-            <img src="{{ group.photo_url }}" class="card_image">
+            <img src="{{ group.photo_url }}" class="card_image" alt="Фото группы">
             <div class="card-content">
                 <p class="title">{{ group.facultet }}{{ group.kafedra }}-{{ group.course }}{{ group.count }}</p>
-                <a href="{% url 'group_info' group.id %}" class="card-button">Подробнее</a>
-                <form method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="group_id" value="{{ group.id }}">
-                    <button type="submit" class="card-button">Добавить</button>
-                </form>
+                <div class="button-container">
+                    <a href="{% url 'group_info' group.id %}" class="card-button">Подробнее</a>
+                    <form method="POST" style="margin: 0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="group_id" value="{{ group.id }}">
+                        <button type="submit" class="card-button">Добавить</button>
+                    </form>
+                </div>
             </div>
         </div>
     {% endfor %}
@@ -55,19 +69,33 @@
 
 {% block extra_scripts %}
 <script>
+     // Сохраняем позицию прокрутки перед отправкой формы
+     window.addEventListener("beforeunload", function () {
+        localStorage.setItem("scrollPosition", window.scrollY);
+    });
+
+    // Восстанавливаем позицию прокрутки после загрузки страницы
+    window.addEventListener("load", function () {
+        const scrollPosition = localStorage.getItem("scrollPosition");
+        if (scrollPosition) {
+            window.scrollTo(0, scrollPosition);
+            localStorage.removeItem("scrollPosition");
+        }
+    });
+
+
     document.addEventListener('DOMContentLoaded', function () {
-        const flashMessage = "{{ flash_message|escapejs }}";
-        console.log(flashMessage);  
-
-        if (flashMessage) {
-            const messageContainer = document.createElement('div');
-            messageContainer.className = 'flash-message';
-            messageContainer.textContent = flashMessage;
-            document.body.appendChild(messageContainer);
-
+        // Находим все алерты
+        const alerts = document.querySelectorAll('.alert-container .alert');
+        if (alerts.length > 0) {
+            // Устанавливаем таймер для скрытия сообщений
             setTimeout(() => {
-                messageContainer.remove();
-            }, 4000);
+                alerts.forEach(alert => {
+                    alert.style.transition = 'opacity 0.5s ease';
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 500); // Удаляем элементы из DOM
+                });
+            }, 4000); // Время отображения сообщения (4 секунды)
         }
     });
 </script>

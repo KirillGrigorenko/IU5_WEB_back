@@ -9,6 +9,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.utils.dateparse import parse_date, parse_time
 from django.utils.timezone import now
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 
 def groups_func(request):
@@ -20,7 +22,6 @@ def groups_func(request):
 
     # Проверяем наличие активного урока
     active_lesson = Lesson.objects.filter(status=Lesson.LessonStatus.DRAFT).first()
-    flash_message = ""
 
     # Считаем количество групп в активной заявке
     req_call_count = LessonGroup.objects.filter(lesson=active_lesson).count() if active_lesson else 0
@@ -34,16 +35,16 @@ def groups_func(request):
             if not active_lesson:
                 active_lesson = Lesson.objects.create(
                     status=Lesson.LessonStatus.DRAFT,
-                    name="Новая Заявка",
+                    name="Ваш предмет",
                 )
                 req_call_count = 0  # Начинаем с 0, так как новая заявка только что создана
 
             # Проверяем, не добавлена ли группа в заявку
             if LessonGroup.objects.filter(lesson=active_lesson, group=group).exists():
-                flash_message = "Группа уже добавлена в текущую заявку."
+                messages.warning(request, "Группа уже добавлена в текущую заявку.")
             else:
                 LessonGroup.objects.create(lesson=active_lesson, group=group)
-                flash_message = "Группа успешно добавлена."
+                messages.success(request, "Группа успешно добавлена.")
                 req_call_count += 1  # Увеличиваем количество групп в заявке
  
     # Отправляем данные в шаблон
@@ -54,9 +55,7 @@ def groups_func(request):
             'ReqCallCount': req_call_count,
             'active_lesson': active_lesson,
         },
-        'flash_message': flash_message,  # Передаем сообщение для отображения
     })
-
 
 
 def info(request, id):
@@ -67,44 +66,85 @@ def info(request, id):
         }
     })
 
+
+
 def get_schedule(request, order_id):
-    lesson = get_object_or_404(Lesson, id=order_id, status=Lesson.LessonStatus.DRAFT)
+    # Получаем Lesson по ID
+    lesson = get_object_or_404(Lesson, id=order_id)
+
+    if lesson.status != Lesson.LessonStatus.DRAFT:
+        raise Http404("Страница не найдена")
+
     related_groups = LessonGroup.objects.filter(lesson=lesson)
 
-    # Текущая дата и время для шаблона
-    today = now()
-    today_date = today.date()
-    now_time = today.strftime('%H:%M')
-
-    flash_message = ""  # Переменная для flash-сообщения
+    # Определяем текущую дату и время
+    today = timezone.now()  # Текущая дата и время
+    today_date_input = today.strftime('%Y-%m-%d')  # Формат для <input type="date">
+    now_time = today.strftime('%H:%M')  # Только время
 
     if request.method == 'POST':
-        update_type = request.POST.get('update_type', '')
+        # Обрабатываем изменение информации о группе (Здание и аудитория)
+        audience = request.POST.get('audience')
+        building = request.POST.get('building')
 
-        if update_type == 'formation_datetime':
-            new_date = request.POST.get('formation_date', '').strip()
-            new_time = request.POST.get('formation_time', '').strip()
-            parsed_date = parse_date(new_date)
-            parsed_time = parse_time(new_time)
+        if audience and building:
+            # Обновляем информацию для всех групп, связанных с заявкой
+            for lesson_group in related_groups:
+                lesson_group.audience = audience
+                lesson_group.building = building
+                lesson_group.save()
+
+            # Добавляем уведомление о том, что все группы были обновлены
+            messages.success(request, f"Все группы в заявке были успешно обновлены.")
+
+        # Обрабатываем удаление группы
+        remove_group_id = request.POST.get('remove_group_id')
+        if remove_group_id:
+            lesson_group = get_object_or_404(LessonGroup, id=remove_group_id, lesson=lesson)
+            lesson_group.delete()
+
+            # Добавляем уведомление об удалении
+            messages.success(request, f"Группа {lesson_group.group} была успешно удалена из заявки.")
+
+        # Сохраняем изменения и меняем статус заявки на FORMED только при нажатии на кнопку "Сохранить заявку"
+        if 'save_lesson' in request.POST:
+
+            name = request.POST.get('name', lesson.name)
+            time = request.POST.get('time', lesson.time)
+            date = request.POST.get('date', lesson.date)
+
+            if not time or not date:
+                messages.error(request, "Нельзя сохранить заявку: не указаны время и дата урока.")
+                return redirect(request.path)
+
+        # Не работает проверка на дату и время, ибо оно всегда есть, по умолчанию
+        
+            missing_fields = related_groups.filter(audience='', building='')
+            if missing_fields.exists():
+                messages.error(request, "Нельзя сохранить заявку: не заданы аудитория и здание для всех групп.")
+                return redirect(request.path)
             
-            if parsed_date and parsed_time:
-                lesson.formation_datetime = now().replace(
-                    year=parsed_date.year, month=parsed_date.month, day=parsed_date.day,
-                    hour=parsed_time.hour, minute=parsed_time.minute, second=0, microsecond=0
-                )
-                lesson.save()
-                flash_message = 'Дата и время формирования успешно обновлены.'
-                messages.success(request, flash_message)
-            else:
-                flash_message = 'Неверный формат даты или времени.'
-                messages.error(request, flash_message)
+            lesson.name = name
+            lesson.time = time
+            lesson.date = date
 
+            if lesson.status == Lesson.LessonStatus.DRAFT:
+                lesson.formation_datetime = timezone.now()
+            # Меняем статус заявки на FORMED
+            lesson.status = Lesson.LessonStatus.FORMED
+            lesson.save()
+
+            # Добавляем уведомление о сохранении заявки
+            messages.success(request, "Заявка успешно сохранена и изменена на статус 'Сформирована'.")
+
+            # Перенаправляем на страницу поиска групп
+            return redirect('groups_search')  # Перенаправление на страницу 'groups_search'
+
+    # Передаем данные в шаблон
     context = {
         'lesson': lesson,
         'related_groups': related_groups,
-        'today_date': today_date,
-        'now_time': now_time,
-        'flash_message': flash_message,  # Передаем flash-сообщение в шаблон
+        'today_date_input': today_date_input,      # Для <input type="date">
+        'now_time': now_time,                     # Для времени
     }
-
     return render(request, 'schedule.html', context)

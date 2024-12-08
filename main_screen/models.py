@@ -31,6 +31,8 @@ class Lesson(models.Model):
     time = models.CharField(max_length=30, default='12:00')
     date = models.DateField(default=timezone.now)
 
+
+    
     def __str__(self):
         return f"Lesson {self.name} on {self.date} at {self.time}"
 
@@ -48,16 +50,12 @@ class LessonGroup(models.Model):
         db_table = 'Lesson_in_progress'
         unique_together = ('lesson', 'group')
 
-    def clean(self):
-        # Проверка, что для всех групп в уроке building, audience и headboy одинаковые
-        lesson_groups = LessonGroup.objects.filter(lesson=self.lesson)
-        if lesson_groups.exists():
-            first_group = lesson_groups.first()
-            # Проверка совпадений
-            if (first_group.headboy != self.headboy or
-                first_group.building != self.building or
-                first_group.audience != self.audience):
-                raise ValidationError("Все группы в одном уроке должны иметь одинаковые значения headboy, building и audience.")
     
     def __str__(self):
         return f'Lesson {self.lesson.id} - Group {self.group.id} ({self.audience})'
+
+    def update_related_groups(self, building, audience):
+        """
+        Обновляет поля building и audience у всех групп, связанных с уроком.
+        """
+        LessonGroup.objects.filter(lesson=self.lesson).update(building=building, audience=audience)
