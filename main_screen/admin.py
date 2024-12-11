@@ -5,7 +5,7 @@ from .models import Group, Lesson, LessonGroup
 class LessonGroupForm(forms.ModelForm):
     class Meta:
         model = LessonGroup
-        fields = ['lesson', 'group', 'building', 'audience', 'headboy']
+        fields = ['lesson', 'group', 'headboy']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -19,17 +19,17 @@ class LessonGroupInline(admin.TabularInline):
 
 class LessonAdmin(admin.ModelAdmin):
     inlines = [LessonGroupInline]
-    list_display = ('id', 'name', 'date', 'time', 'status')
+    list_display = ('id', 'name', 'date', 'time', 'status', 'building', 'audience', 'lecturer', 'manager')
     list_filter = ('status',)
     search_fields = ('name',)
 
 class GroupAdmin(admin.ModelAdmin):
     list_display = ('facultet', 'kafedra', 'course', 'count', 'headboy', 'status')
-    list_filter = ('status',)
+    list_filter = ('status', 'kafedra')
     search_fields = ('facultet', 'kafedra', 'headboy')
 
 class LessonGroupAdmin(admin.ModelAdmin):
-    list_display = ('lesson', 'group', 'building', 'audience', 'headboy')
+    list_display = ('lesson', 'group', 'headboy')
     list_filter = ('lesson', 'group')
 
 admin.site.register(Lesson, LessonAdmin)

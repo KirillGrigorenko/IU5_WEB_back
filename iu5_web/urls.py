@@ -21,7 +21,29 @@ from main_screen import views as m_s
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('groups/', m_s.groups_func, name='groups_search'),
-    path('groups/info/<int:id>/', m_s.info, name='group_info'),
-    path('schedule/<int:order_id>/', m_s.get_schedule, name='schedule')
-]
+    path('groups/', m_s.groups_list, name='groups_list'),
+    path('group_info/<int:id>/', m_s.group_info, name='group_info'),
+    path('lesson/<int:id>/', m_s.get_lesson, name='get_lesson'),
+    path('add_group_to_lesson/', m_s.add_group_to_lesson, name='add_group_to_lesson'),
+    path('delete_lesson/<int:id>/', m_s.remove_lesson_request, name='remove_lesson_request'),
+    path('update_headboy/<int:id>/', m_s.update_headboy, name='update_headboy'),
+  ]
+
+"""     
+   
+
+        main_page GET
+    path('', views.get_software_list, name='software_list'), 
+
+        add_to_lesson POST
+    path('add_software_to_cart/', views.add_software_to_cart, name='add_software_to_cart'),
+    
+        info/group/<> GET
+    path('software/<int:id>/', views.software_page, name='software'),
+    
+        lessons     GET
+    path('install_software_request/<int:id>/', views.get_software_request, name='install_software_request'),
+    
+        delete_lesson POST
+    path('remove_software_request/<int:id>/', views.remove_software_request, name='remove_software_request'),
+]"""

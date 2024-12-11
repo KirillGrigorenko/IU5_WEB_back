@@ -14,21 +14,28 @@
             </select>
             <button type="submit" class="card-button">Найти</button>
         </form> 
-        <div class="count">
-            {{ data.ReqCallCount }}
-        </div>
+
 
         <div class="floating-button">
             <a 
-                {% if data.active_lesson %} 
-                    href="http://localhost:8000/schedule/{{ data.active_lesson.id }}" 
+                {% if data.groups_in_lesson != 0 %} 
+                    href="http://localhost:8000/lesson/{{ data.request_id }}" 
+                    
                 {% else %}
                     class="disabled" 
                 {% endif %}
                 >
+                
                 <img src="{{ 'http://127.0.0.1:9000/lab1/check-circle.svg' }}" alt="Кнопка" />
+                
+                {% if data.groups_in_lesson != 0 %} 
+                    <div class="lesson_in_data">
+                        {{data.groups_in_lesson}}
+                    </div>
+                {% endif %}
             </a>
         </div>
+
 
         <div class="alert-container">
             {% if messages %}
@@ -47,6 +54,7 @@
 {% block container %}
 
 
+
 <div class="card-container">
     {% for group in data.groups %}
         <div class="card">
@@ -55,16 +63,16 @@
                 <p class="title">{{ group.facultet }}{{ group.kafedra }}-{{ group.course }}{{ group.count }}</p>
                 <div class="button-container">
                     <a href="{% url 'group_info' group.id %}" class="card-button">Подробнее</a>
-                    <form method="POST" style="margin: 0;">
+                    <form method="post" action="{% url 'add_group_to_lesson' %}">
                         {% csrf_token %}
-                        <input type="hidden" name="group_id" value="{{ group.id }}">
-                        <button type="submit" class="card-button">Добавить</button>
+                        <button type="submit" class="card-button" name="add_to_lesson" value="{{ group.id }}">Добавить</button>
                     </form>
                 </div>
             </div>
         </div>
     {% endfor %}
 </div>
+
 {% endblock %}
 
 {% block extra_scripts %}

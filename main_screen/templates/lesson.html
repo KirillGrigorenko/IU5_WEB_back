@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block search %} {% endblock %}
+
+{% block container %}
+<div class="space_schedule"></div>
+
+{% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if data.id %}
+    <div class="edit-lesson">
+        <h2 class="edit-lesson-title">Просмотреть заявку: {{ data.req_id }}</h2>
+    
+        <div class="edit-lesson-form">
+            
+            <label for="name">Название занятия:</label>
+            <input type="text" id="name" name="name" value="">
+        
+            <label for="date">Дата занятия:</label>
+            <input type="date" id="date" name="date" value="">
+        
+            <label for="time">Время занятия:</label>
+            <input type="time" id="time" name="time" value="">
+        
+            <label for="formation_date">Дата формирования:</label>
+            <input type="date" id="formation_date" name="formation_date" value="" readonly>
+        
+            <label for="formation_time">Время формирования:</label>
+            <input type="time" id="formation_time" name="formation_time" value="" readonly>
+            
+            {% if data.id%}   
+            <form method="post" action="{% url 'remove_lesson_request' data.id %}">
+                {% csrf_token %} 
+                <button  type="submit" name="request_action" value="delete_lesson">✖</button>
+            </form>
+
+            
+            {% endif %}
+        </div>
+    </div>
+    <form method="post" action="{% url 'update_headboy' data.id %}">
+        {% csrf_token %}
+        <h3 class="groups-title">Группы:</h3>
+        <div class="save-button-container">
+            <button class= "btn_headboy" type="submit" name="request_action" value="update_headboy">💾 Выбрать старосту</button>
+        </div>
+        <div class="groups-container">
+            
+                {% for lesson_group in data.groups %}
+                    <div class="card-schedule">
+                        {% if lesson_group.group.photo_url %}
+                            <img src="{{ lesson_group.group.photo_url }}" class="card-image" alt="Фото группы">
+                        {% endif %}
+                        <div class="card-content-schedule">
+                            <p class="title-schedule">{{ lesson_group.group.facultet }}{{ lesson_group.group.kafedra }}-{{ lesson_group.group.course }}{{ lesson_group.group.count }}</p>
+
+                                <label for="audience">Аудитория:</label>
+                                <input type="text" name="audience" value="" class="small-input">
+                            
+                                <label for="building">Здание:</label>
+                                <input type="text" name="building" value="" class="small-input">
+                            
+                                <input type="hidden" name="lesson_group_id" value="">
+
+                                <label>
+                                    <input type="radio" name="selected_group" value="{{ lesson_group.id }}">
+                                    Староста: {{ lesson_group.group.headboy }} (ID: {{ lesson_group.id }})
+                                </label>
+                            <p>Контактный телефон: {{ lesson_group.group.contact_phone }}</p>
+                            
+
+
+                        </div>
+                    </div>
+                {% endfor %}
+        </div>
+        
+    </form>
+{% else %}
+    <p class="no-lesson">Заявка не найдена или еще не сформирована.</p>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Сохраняем позицию прокрутки перед отправкой формы
+    window.addEventListener("beforeunload", function () {
+        localStorage.setItem("scrollPosition", window.scrollY);
+    });
+
+    // Восстанавливаем позицию прокрутки после загрузки страницы
+    window.addEventListener("load", function () {
+        const scrollPosition = localStorage.getItem("scrollPosition");
+        if (scrollPosition) {
+            window.scrollTo(0, scrollPosition);
+            localStorage.removeItem("scrollPosition");
+        }
+    });
+</script>
+{% endblock %}
