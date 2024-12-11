@@ -10,22 +10,34 @@ from django.utils.timezone import now
 from django.utils import timezone
 from django.db import connection
 from django.core.exceptions import ValidationError
+from rest_framework.decorators import *
+from rest_framework.response import Response
+from main_screen.serializers import *
+
 
 USER_ID = 1
 
+
+@api_view(['GET'])
 def groups_list(request):
     """
     Страница списка услуг = групп + фильтр по курсу
     """
-    srch_course = request.GET.get('srch_course', '')
-
-
+    srch_course = request.query_params.get('srch_course')
     if srch_course and srch_course != '0':
         filtered_groups = Group.objects.filter(status='Действует', course__icontains=srch_course).order_by('id')
     else:
         filtered_groups = Group.objects.filter(status='Действует').order_by('id')
 
     req = Lesson.objects.filter(lecturer_id=USER_ID, status=Lesson.LessonStatus.DRAFT).first()
+
+    serialazer = AllGroupsSerializer(filtered_groups, many=True)
+
+    return Response(
+        {'groups': serialazer.data,
+        'groups_in_lesson': (get_groups_in_lesson(req.id) if req is not None else 0),
+        'request_id': (req.id if req is not None else 0)}
+    )
 
     return render(request, 'groups.html', {
         'data': {
