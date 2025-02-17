@@ -19,6 +19,16 @@ USER_ID = 1
 
 
 @api_view(['GET'])
+def get_group(request, id: int):
+    """
+    Получение одной группы по ID
+    """
+    group = get_object_or_404(Group, id=id, status='Действует')
+    serializer = AllGroupsSerializer(group)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
 def groups_list(request):
     """
     Страница списка услуг = групп + фильтр по курсу
@@ -48,6 +58,31 @@ def groups_list(request):
         },
     })
 
+@api_view(['POST'])
+def create_group(request):
+    """
+    Добавление новой группы
+    """
+    serializer = AllGroupsSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)  # Created
+    return Response(serializer.errors, status=400)  # Bad Request
+
+@api_view(['PUT'])
+def update_group(request, id: int):
+    """
+    Обновление данных группы (услуги) по ID
+    """
+    group = get_object_or_404(Group, id=id)
+    serializer = AllGroupsSerializer(group, data=request.data, partial=True)  # partial=True → частичное обновление
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=200)
+    
+    return Response(serializer.errors, status=400)
+
 
 def get_groups_in_lesson(lesson_id: int) -> int:
     """
@@ -55,18 +90,6 @@ def get_groups_in_lesson(lesson_id: int) -> int:
     """
     return LessonGroup.objects.filter(lesson_id=lesson_id).count()
 
-def group_info(request, id):
-    """
-    Получение страницы услуги = группы
-    """
-    group = Group.objects.filter(id=id).first()
-    if group is None:
-        return render(request, 'info_group.html')
-
-    return render(request, 'info_group.html',
-                  {'data': {
-                      'group': group,
-                  }})
 
 def get_lesson(request, id: int):
     """

@@ -22,11 +22,16 @@ from main_screen import views as m_s
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('groups/', m_s.groups_list, name='groups_list'),
-    path('group_info/<int:id>/', m_s.group_info, name='group_info'),
+    path('group_info/<int:id>/', m_s.get_group, name='get_group'),
+    path('group/create/', m_s.create_group, name='create_group'),
+    path('group/<int:id>/update/', m_s.update_group, name='update_group'),
+
     path('lesson/<int:id>/', m_s.get_lesson, name='get_lesson'),
     path('add_group_to_lesson/', m_s.add_group_to_lesson, name='add_group_to_lesson'),
     path('delete_lesson/<int:id>/', m_s.remove_lesson_request, name='remove_lesson_request'),
     path('update_headboy/<int:id>/', m_s.update_headboy, name='update_headboy'),
+  
+
   ]
 
 """     
