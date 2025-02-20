@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main_screen',
+
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +132,9 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MINIO_ENDPOINT_URL = '127.0.0.1:9000'  # Убедись, что это правильный адрес твоего MinIO
+AWS_ACCESS_KEY_ID = 'minioadmin'  # Используй правильный ключ
+AWS_SECRET_ACCESS_KEY = 'miniopassword'  # Используй правильный секретный ключ
+MINIO_USE_SSL = False  # Если MinIO настроен без SSL
+AWS_STORAGE_BUCKET_NAME = 'lab1'  # Имя твоего бакета

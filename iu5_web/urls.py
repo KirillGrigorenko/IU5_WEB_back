@@ -25,6 +25,25 @@ urlpatterns = [
     path('group_info/<int:id>/', m_s.get_group, name='get_group'),
     path('group/create/', m_s.create_group, name='create_group'),
     path('group/<int:id>/update/', m_s.update_group, name='update_group'),
+    path('group/<int:id>/delete/', m_s.delete_group, name='delete_group'),
+    path('lesson/create/', m_s.create_draft_lesson, name='create_draft_lesson'),
+    path('group/<int:id>/upload_image/', m_s.upload_group_image, name='upload_group_image'),
+
+    path('lessons/', m_s.get_lessons, name='get_lessons'),
+    path('lessons/<int:pk>/', m_s.get_lesson_id, name='get_lesson_id'),
+    path('lessons/<int:pk>/update/', m_s.update_lesson, name='update_lesson'),  # Новый путь для PUT запроса
+    path('lessons/<int:pk>/form/', m_s.form_lesson, name='form_lesson'),  # Новый путь для формирования занятия
+    path('lessons/<int:pk>/update_status/', m_s.update_lesson_status, name='update_lesson_status'),
+    path('lessons/<int:pk>/delete/', m_s.delete_lesson, name='delete_lesson'),
+    
+    path('user/register/', m_s.create_user, name='register_user'),
+    path("login/", m_s.login_user, name="login"),
+    path('user/update/', m_s.update_user, name='update_user'),
+    path('logout/', m_s.logout_user, name='logout_user'),
+
+    path('lesson_group/<int:lesson_pk>/<int:group_pk>/delete', m_s.delete_lesson_group, name='lesson_group_delete'),
+    path('lesson_group/<int:lesson_pk>/<int:group_pk>/put', m_s.put_lesson_group, name='lesson_group_put'),
+
 
     path('lesson/<int:id>/', m_s.get_lesson, name='get_lesson'),
     path('add_group_to_lesson/', m_s.add_group_to_lesson, name='add_group_to_lesson'),

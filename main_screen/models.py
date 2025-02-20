@@ -12,7 +12,7 @@ class Group(models.Model):
     contact_phone = models.CharField(max_length=15)
     photo_url = models.CharField(max_length=254, null=False ,default="")
     status = models.CharField(max_length=10, default='Действует')
-
+    is_active = models.BooleanField(default=True)
     def __str__(self):
         return f'{self.facultet.replace(" ", "")}{self.kafedra.replace(" ", "")}-{self.course}{self.count}'
 
@@ -35,7 +35,6 @@ class Lesson(models.Model):
     date = models.DateField(default=timezone.now)
     building = models.CharField(max_length=100, default='ГЗ')
     audience = models.CharField(max_length=100, default='209')
-
     
     def __str__(self):
         return f"Lesson {self.name} on {self.date} at {self.time} in {self.building}  audience {self.audience}"
